@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-gray-800;
+  }
+  
+  body {
+    @apply bg-dark-300 text-white font-sans;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-gradient-to-r from-neon-blue to-neon-purple text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 hover:shadow-neon-both hover:scale-105 active:scale-95;
+  }
+  
+  .btn-secondary {
+    @apply border border-neon-blue text-neon-blue font-semibold py-2 px-4 rounded-lg transition-all duration-300 hover:bg-neon-blue hover:text-white hover:shadow-neon-blue;
+  }
+  
+  .card {
+    @apply bg-dark-200 border border-gray-800 rounded-xl p-6 transition-all duration-300 hover:border-neon-blue hover:shadow-neon-blue;
+  }
+  
+  .neon-text {
+    @apply bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent;
+  }
+  
+  .glass {
+    @apply bg-white/5 backdrop-blur-md border border-white/10;
+  }
+  
+  .search-input {
+    @apply w-full bg-dark-200 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-neon-blue focus:outline-none focus:ring-2 focus:ring-neon-blue/20 transition-all duration-300;
+  }
+}
+
+@layer utilities {
+  .text-shadow-glow {
+    text-shadow: 0 0 10px currentColor;
+  }
+  
+  .animate-pulse-glow {
+    animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px currentColor);
+  }
+  50% {
+    opacity: .8;
+    filter: drop-shadow(0 0 20px currentColor);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #3b82f6, #a855f7);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #2563eb, #9333ea);
+}
