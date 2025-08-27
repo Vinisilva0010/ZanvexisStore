@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { HiMail, HiGift, HiCheck, HiExclamationTriangle } from 'react-icons/hi'
+import { HiMail, HiGift, HiCheck, HiExclamationCircle } from 'react-icons/hi'
 
 export default function EmailCapture() {
   const [email, setEmail] = useState('')
@@ -188,7 +188,7 @@ export default function EmailCapture() {
             animate={{ opacity: 1, y: 0 }}
             className="flex items-center space-x-2 text-red-400 text-sm"
           >
-            <HiExclamationTriangle className="w-4 h-4" />
+            <HiExclamationCircle className="w-4 h-4" />
             <span>{error}</span>
           </motion.div>
         )}
