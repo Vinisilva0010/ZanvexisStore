@@ -4,7 +4,10 @@ import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import CookieConsent from '@/components/CookieConsent'
+import { CartProvider } from '@/contexts/CartContext';
 import AffiliateDisclaimer from '@/components/AffiliateDisclaimer'
+import { GoogleAnalytics } from '@next/third-parties/google'
+import WhatsAppButton from '@/components/WhatsAppButton';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -78,17 +81,27 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className="dark">
       <body className={inter.className}>
+        {/* O Provider deve envolver toda a estrutura da página */}
+        <CartProvider>
+          {/* Este div organiza o layout para o footer ficar no final */}
+          <div className="min-h-screen flex flex-col">
+            <Header />
+            {/* O 'main' recebe o conteúdo da página e o padding para o header fixo */}
+            <main className="flex-1 pt-20">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </CartProvider>
+        
+        {/* Componentes de aviso podem ficar fora da estrutura principal */}
         <AffiliateDisclaimer />
-        <div className="min-h-screen flex flex-col">
-          <Header />
-          <main className="flex-1">
-            {children}
-          </main>
-          <Footer />
-        </div>
         <CookieConsent />
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID!} />
+        <WhatsAppButton />
       </body>
     </html>
   )
 }
+
 

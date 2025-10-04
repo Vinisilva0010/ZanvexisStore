@@ -238,3 +238,4 @@ export default function ProductCompare({ products }: ProductCompareProps) {
     </motion.div>
   )
 }
+

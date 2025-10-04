@@ -8,8 +8,27 @@ const withPWA = require('next-pwa')({
 
 const nextConfig = {
   images: {
-    domains: ['via.placeholder.com', 'images.unsplash.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'zohhgbinjxkreodhsylf.supabase.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+      },
+      // 👇 ADICIONADO O NOVO HOSTNAME AQUI 👇
+      {
+        protocol: 'https',
+        hostname: 'user-gen-media-assets.s3.amazonaws.com',
+      },
+    ],
   },
 };
 
 module.exports = withPWA(nextConfig);
+

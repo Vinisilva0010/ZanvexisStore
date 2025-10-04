@@ -1,187 +1,155 @@
-'use client'
+// app/produtos/page.tsx
 
-import { useState, useMemo } from 'react'
-import { motion } from 'framer-motion'
-import SearchBar from '@/components/SearchBar'
-import ProductGrid from '@/components/ProductGrid'
-import ProductCompare from '@/components/ProductCompare'
-import { products, categories, searchProducts } from '@/data/products'
-export default function ProductsPage() {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+import { supabase } from '@/lib/supabaseClient';
+import ProductGrid from '@/components/ProductGrid';
+import CategoriesSection from '@/components/CategoriesSection';
+import type { Product } from '@/types';
 
-  const filteredProducts = useMemo(() => {
-    let result = products
+// CORREÇÃO: searchParams agora é uma Promise
+export default async function PaginaDeProdutos({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>; // ✅ Tipo corrigido
+}) {
+  
+  const resolvedParams = await searchParams; // ✅ Await adicionado
+  const categoria = resolvedParams?.categoria as string;
 
-    // Filter by search query
-    if (searchQuery.trim()) {
-      result = searchProducts(searchQuery)
-    }
+  // Criamos uma consulta base
+  let query = supabase.from('produtos').select('*');
 
-    // Filter by category
-    if (selectedCategory) {
-      result = result.filter(product => product.categoria === selectedCategory)
-    }
+  // Se uma categoria foi passada na URL, adicionamos um filtro à consulta
+  if (categoria) {
+    query = query.eq('categoria', categoria);
+  }
 
-    return result
-  }, [searchQuery, selectedCategory])
+  // Executamos a consulta final
+  const { data: produtos, error } = await query.order('created_at', { ascending: false });
 
-  const handleCategoryFilter = (categorySlug: string | null) => {
-    setSelectedCategory(categorySlug)
+  if (error) {
+    console.error("Erro ao buscar produtos:", error);
   }
 
   return (
-    <div className="pt-24 pb-16 min-h-screen bg-dark-300">
-      <div className="container mx-auto px-4">
-        {/* Page Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Nossos <span className="neon-text">Produtos</span>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-[#0a0a0f] to-gray-900">
+      <div className="container mx-auto px-4 py-16">
+        {/* Header Section */}
+        <div className="text-center mb-16">
+          {/* Badge */}
+          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm border border-blue-500/30 rounded-full px-5 py-2 mb-6">
+            <span className="text-sm font-semibold text-blue-300">✨ Catálogo Completo</span>
+          </div>
+
+          {/* Title */}
+          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            <span className="text-white">Nossos </span>
+            <span className="bg-gradient-to-r from-blue-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
+              Produtos
+            </span>
           </h1>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Descubra nossa seleção completa de produtos tecnológicos de última geração.
+
+          {/* Subtitle */}
+          <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+            Explore nossa coleção de{' '}
+            <span className="text-blue-400 font-semibold">tecnologia de ponta</span>
+            {' '}com os melhores preços do mercado
           </p>
-        </motion.div>
 
-        {/* Search Bar */}
-        <SearchBar
-          onSearch={setSearchQuery}
-          placeholder="Buscar produtos, categorias..."
-        />
+          {/* Decorative Line */}
+          <div className="h-1 w-24 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-8 rounded-full" />
 
-        {/* Category Filters */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex flex-wrap gap-4 justify-center mb-12"
-        >
-          <motion.button
-            onClick={() => handleCategoryFilter(null)}
-            className={`px-6 py-2 rounded-full border transition-all duration-300 ${
-              selectedCategory === null
-                ? 'bg-neon-blue text-white border-neon-blue shadow-neon-blue'
-                : 'border-gray-600 text-gray-400 hover:border-neon-blue hover:text-neon-blue'
-            }`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Todos
-          </motion.button>
-          
-          {categories.map((category) => (
-            <motion.button
-              key={category.slug}
-              onClick={() => handleCategoryFilter(category.slug)}
-              className={`px-6 py-2 rounded-full border transition-all duration-300 ${
-                selectedCategory === category.slug
-                  ? 'bg-neon-blue text-white border-neon-blue shadow-neon-blue'
-                  : 'border-gray-600 text-gray-400 hover:border-neon-blue hover:text-neon-blue'
-              }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {category.icon} {category.nome}
-            </motion.button>
-          ))}
-        </motion.div>
+          {/* Stats */}
+          <div className="grid grid-cols-3 gap-6 max-w-2xl mx-auto mt-12">
+            <div className="text-center p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
+              <div className="text-3xl font-bold text-white mb-1">{produtos?.length || 0}+</div>
+              <div className="text-sm text-gray-400">Produtos</div>
+            </div>
+            <div className="text-center p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
+              <div className="text-3xl font-bold text-white mb-1">50k+</div>
+              <div className="text-sm text-gray-400">Clientes</div>
+            </div>
+            <div className="text-center p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
+              <div className="text-3xl font-bold text-white mb-1">4.8⭐</div>
+              <div className="text-sm text-gray-400">Avaliação</div>
+            </div>
+          </div>
+        </div>
 
-        {/* Results Info */}
-        {searchQuery && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8 text-center"
-          >
-            <p className="text-gray-400">
-              Resultados para: <span className="text-white font-medium">&quot;{searchQuery}&quot;</span>
-              {selectedCategory && (
-                <>
-                  {' '}em <span className="text-neon-blue">{categories.find(c => c.slug === selectedCategory)?.nome}</span>
-                </>
-              )}
-            </p>
-          </motion.div>
+        {/* Categories Filter */}
+        <div className="mb-12">
+          <CategoriesSection />
+        </div>
+
+        {/* Active Filter Indicator */}
+        {categoria && (
+          <div className="mb-8 flex items-center justify-center space-x-3">
+            <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-sm border border-blue-500/30 rounded-full px-6 py-3 flex items-center space-x-3">
+              <span className="text-sm text-gray-300">Filtrando por:</span>
+              <span className="text-sm font-semibold text-blue-400 capitalize">{categoria}</span>
+              <a
+                href="/produtos"
+                className="ml-2 text-xs text-gray-400 hover:text-white transition-colors underline"
+              >
+                Limpar filtro
+              </a>
+            </div>
+          </div>
         )}
 
         {/* Products Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-        >
-          <ProductGrid products={filteredProducts} />
-        </motion.div>
-
-        {/* Product Compare Demo */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="mt-20"
-        >
-          <ProductCompare 
-            products={[
-              {
-                nome: "iPhone 15 Pro Max",
-                preco: 7999.99,
-                frete: 0,
-                garantia: "1 ano",
-                loja: "Amazon",
-                link: "https://amazon.com.br/iphone-15"
-              },
-              {
-                nome: "iPhone 15 Pro Max",
-                preco: 8199.99,
-                frete: 29.90,
-                garantia: "1 ano",
-                loja: "Shopee",
-                link: "https://shopee.com.br/iphone-15"
-              },
-              {
-                nome: "iPhone 15 Pro Max",
-                preco: 7899.99,
-                frete: 15.00,
-                garantia: "1 ano",
-                loja: "MercadoLivre",
-                link: "https://mercadolivre.com.br/iphone-15"
-              }
-            ]}
-          />
-        </motion.div>
-
-        {/* Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="mt-20 glass rounded-2xl p-8"
-        >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-3xl font-bold neon-text mb-2">{products.length}</div>
-              <div className="text-gray-400 text-sm">Produtos Disponíveis</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold neon-text mb-2">{categories.length}</div>
-              <div className="text-gray-400 text-sm">Categorias</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold neon-text mb-2">24h</div>
-              <div className="text-gray-400 text-sm">Entrega Rápida</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold neon-text mb-2">100%</div>
-              <div className="text-gray-400 text-sm">Garantia</div>
-            </div>
+        {produtos && produtos.length > 0 ? (
+          <ProductGrid products={produtos} />
+        ) : (
+          <div className="text-center py-20">
+            <div className="text-8xl mb-6">🔍</div>
+            <h3 className="text-2xl font-bold text-white mb-4">Nenhum produto encontrado</h3>
+            <p className="text-gray-400 mb-8">
+              Não encontramos produtos para esta categoria.
+            </p>
+            <a
+              href="/produtos"
+              className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold px-8 py-4 rounded-xl hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] transition-all duration-300"
+            >
+              <span>Ver Todos os Produtos</span>
+            </a>
           </div>
-        </motion.div>
+        )}
+
+        {/* Features Section */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20 pt-12 border-t border-gray-800">
+          {[
+            {
+              icon: '🚀',
+              title: 'Entrega Expressa',
+              desc: 'Receba seus produtos em até 48h',
+              color: 'from-blue-500/10 to-blue-600/10 border-blue-500/30',
+            },
+            {
+              icon: '🔒',
+              title: 'Pagamento Seguro',
+              desc: 'Suas transações 100% protegidas',
+              color: 'from-purple-500/10 to-purple-600/10 border-purple-500/30',
+            },
+            {
+              icon: '💎',
+              title: 'Garantia Premium',
+              desc: 'Cobertura completa de 12 meses',
+              color: 'from-green-500/10 to-green-600/10 border-green-500/30',
+            },
+          ].map((feature, index) => (
+            <div
+              key={index}
+              className={`p-6 rounded-2xl bg-gradient-to-br ${feature.color} backdrop-blur-sm border hover:scale-105 transition-all duration-300 group`}
+            >
+              <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                {feature.icon}
+              </div>
+              <h4 className="text-xl font-bold text-white mb-2">{feature.title}</h4>
+              <p className="text-gray-400">{feature.desc}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
-  )
+  );
 }

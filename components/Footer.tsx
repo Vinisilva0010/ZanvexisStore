@@ -3,9 +3,10 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { FiExternalLink, FiHeart } from 'react-icons/fi'
-import { HiMail, HiPhone, HiLocationMarker } from 'react-icons/hi'
 
 export default function Footer() {
+
+  // --- ALTERAÇÕES FEITAS AQUI ---
   const footerLinks = [
     {
       title: 'Loja',
@@ -24,14 +25,21 @@ export default function Footer() {
       ],
     },
     {
-      title: 'Empresa',
+      // Nome da seção alterado para "Institucional"
+      title: 'Institucional',
       links: [
-        { name: 'Sobre', href: '/sobre' },
+        { name: 'Sobre Nós', href: '/sobre' },
         { name: 'Contato', href: '/contato' },
-        { name: 'Política', href: '/politica' },
+        // Link corrigido e nomeado corretamente
+        { name: 'Política de Privacidade', href: '/politica-de-privacidade' },
+        // Placeholders para as próximas páginas que criaremos
+        { name: 'Política de Troca e Devolução', href: '/politica-de-troca' },
+        { name: 'Termos de Serviço', href: '/termos-de-servico' },
+        { name: 'Prazos de Entrega', href: '/prazos-de-entrega' },
       ],
     },
   ]
+  // --- FIM DAS ALTERAÇÕES ---
 
   return (
     <footer className="bg-dark-200 border-t border-gray-800">
@@ -97,11 +105,10 @@ export default function Footer() {
                 Zanvexis
               </Link>
             </div>
-
-            <div className="text-sm text-gray-400">
-              <p>&copy; 2024 Zanvexis Store. Todos os direitos reservados.</p>
+            <div className="text-sm text-gray-400 text-center md:text-left">
+              <p>&copy; 2025 Zanvexis Store. Todos os direitos reservados.</p>
+              <p>&copy; Proprietario Vinicisu da silva pontual</p>
             </div>
-
             <div className="flex items-center space-x-4">
               <motion.div
                 className="text-xs text-gray-500 bg-dark-300 px-3 py-1 rounded-full"
@@ -122,4 +129,3 @@ export default function Footer() {
     </footer>
   )
 }
-

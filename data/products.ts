@@ -1,6 +1,9 @@
+// data/products.ts
+
 export interface Product {
   id: string;
   nome: string;
+  slug: string; // 👈 ADICIONADO AQUI
   preco: number;
   imagem: string;
   linkAfiliado: string;
@@ -13,6 +16,7 @@ export const products: Product[] = [
   {
     id: '1',
     nome: 'iPhone 15 Pro Max',
+    slug: 'iphone-15-pro-max', // 👈 E AQUI
     preco: 7999.99,
     imagem: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=400&fit=crop',
     linkAfiliado: 'https://amazon.com.br/iphone-15-pro-max',
@@ -23,6 +27,7 @@ export const products: Product[] = [
   {
     id: '2',
     nome: 'Samsung Galaxy S24 Ultra',
+    slug: 'samsung-galaxy-s24-ultra', // 👈 E AQUI
     preco: 6999.99,
     imagem: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400&h=400&fit=crop',
     linkAfiliado: 'https://amazon.com.br/galaxy-s24-ultra',
@@ -33,6 +38,7 @@ export const products: Product[] = [
   {
     id: '3',
     nome: 'AirPods Pro 3ª Geração',
+    slug: 'airpods-pro-3-geracao', // 👈 E AQUI
     preco: 2499.99,
     imagem: 'https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=400&h=400&fit=crop',
     linkAfiliado: 'https://amazon.com.br/airpods-pro-3',
@@ -43,6 +49,7 @@ export const products: Product[] = [
   {
     id: '4',
     nome: 'MacBook Pro M3 14"',
+    slug: 'macbook-pro-m3-14-polegadas', // 👈 E AQUI
     preco: 19999.99,
     imagem: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop',
     linkAfiliado: 'https://amazon.com.br/macbook-pro-m3',
@@ -53,6 +60,7 @@ export const products: Product[] = [
   {
     id: '5',
     nome: 'Apple Watch Series 9',
+    slug: 'apple-watch-series-9', // 👈 E AQUI
     preco: 4299.99,
     imagem: 'https://images.unsplash.com/photo-1551816230-ef5deaed4a26?w=400&h=400&fit=crop',
     linkAfiliado: 'https://amazon.com.br/apple-watch-series-9',
@@ -63,6 +71,7 @@ export const products: Product[] = [
   {
     id: '6',
     nome: 'PlayStation 5 Slim',
+    slug: 'playstation-5-slim', // 👈 E AQUI
     preco: 3999.99,
     imagem: 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=400&fit=crop',
     linkAfiliado: 'https://amazon.com.br/playstation-5-slim',
@@ -73,6 +82,7 @@ export const products: Product[] = [
   {
     id: '7',
     nome: 'Samsung Galaxy Buds Pro 2',
+    slug: 'samsung-galaxy-buds-pro-2', // 👈 E AQUI
     preco: 1299.99,
     imagem: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&h=400&fit=crop',
     linkAfiliado: 'https://amazon.com.br/galaxy-buds-pro-2',
@@ -83,6 +93,7 @@ export const products: Product[] = [
   {
     id: '8',
     nome: 'iPad Pro M2 12.9"',
+    slug: 'ipad-pro-m2-12-9-polegadas', // 👈 E AQUI
     preco: 12999.99,
     imagem: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=400&fit=crop',
     linkAfiliado: 'https://amazon.com.br/ipad-pro-m2',
@@ -92,6 +103,7 @@ export const products: Product[] = [
   },
 ];
 
+// O resto do seu arquivo permanece o mesmo
 export const categories = [
   { slug: 'smartphones', nome: 'Smartphones', icon: '📱' },
   { slug: 'acessorios', nome: 'Acessórios', icon: '🎧' },
@@ -112,4 +124,3 @@ export function searchProducts(query: string): Product[] {
     product.categoria.toLowerCase().includes(query.toLowerCase())
   );
 }
-
